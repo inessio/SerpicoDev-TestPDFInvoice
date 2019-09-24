@@ -16,6 +16,14 @@ class App extends Component {
     ]
   }
 
+  addPackage = (pack) => {
+    let packs = [...this.state.packages, pack]
+    console.log(this.state)
+    this.setState({
+      packs
+    })
+  }
+
   render(){
     return (
       <div className="App">
@@ -24,7 +32,7 @@ class App extends Component {
                 <p className="lead">SerpiCookies</p>
                 <hr className="my-2" /> 
                 <div className="lead">
-                    <AddPackage />     
+                    <AddPackage addPackage={this.addPackage} />     
                 </div>
             </Jumbotron>
             <Container>

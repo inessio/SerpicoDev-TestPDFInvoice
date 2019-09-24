@@ -35,6 +35,8 @@ class AddPackage extends Component {
         };
     
         this.toggle = this.toggle.bind(this);
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
       }
 
     
@@ -45,6 +47,7 @@ class AddPackage extends Component {
       }
 
       handleChange = (e) => {
+        console.log(e.target.value)
         this.setState({
           [e.target.id]:e.target.value
         }) 
@@ -52,7 +55,9 @@ class AddPackage extends Component {
 
       handleSubmit = (e) => {
         e.preventDefault()
-        console.log()
+        console.log('hereree')
+        console.log(this.state)
+        this.props.addPackage(this.state)
       }
     
       render() {
@@ -62,7 +67,7 @@ class AddPackage extends Component {
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
               <ModalHeader toggle={this.toggle}>Cookie</ModalHeader>
               <ModalBody>
-                <Form>
+                <Form onSubmit={this.handleSubmit}>
                     <Row form>
                     <Col md={6}>
                         <FormGroup>
@@ -107,10 +112,11 @@ class AddPackage extends Component {
                         </FormGroup>  
                     </Col>
                     </Row>
+                    <Button color="primary" size="lg" type="submit" onClick={this.toggle} block>Add</Button>
                 </Form>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" size="lg" onClick={this.toggle} block>Add</Button>
+                
               </ModalFooter>
             </Modal>
           </div>
