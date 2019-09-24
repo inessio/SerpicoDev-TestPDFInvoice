@@ -3,41 +3,48 @@ import './App.scss'
 import Logo from '../../assets/images/logo.png'
 import { 
         Jumbotron, 
-        Container 
+        Container,
+        Button,
       } from 'reactstrap'
 import AddPackage from '../addPackageForm/AddPackage'
 import PackageTable from '../packageTable/PackageTable'
+import generateInvoice from '../invoice/Invoice'
 
 class App extends Component {
 
   state = {
-    packages:[
-      {code:'WD3231',type:'vanialia',name:'hello world',quatity:2,individualCost:4,totalCost:8}
-    ]
+    packages:[]
   }
 
   addPackage = (pack) => {
     let packs = [...this.state.packages, pack]
-    console.log(this.state)
     this.setState({
-      packs
+      packages:packs
     })
   }
 
+  getInvoice = (cookies) =>{
+    cookies = this.state.packages
+    generateInvoice(cookies)
+  }
   render(){
+    const { packages } = this.state
     return (
       <div className="App">
-            <Jumbotron>
-                <img src={Logo}></img>
-                <p className="lead">SerpiCookies</p>
-                <hr className="my-2" /> 
-                <div className="lead">
-                    <AddPackage addPackage={this.addPackage} />     
-                </div>
-            </Jumbotron>
-            <Container>
-              <PackageTable packages={this.state.packages} />
-            </Container>   
+        <Jumbotron>
+            <img src={Logo} alt="logo"></img>
+            <p className="display-4">SerpiCookies</p>
+        </Jumbotron>
+        <Container>
+          <div className="m-3">
+            <div className="d-inline-block mx-5">
+              <AddPackage addPackage={this.addPackage} /> 
+            </div>
+                { packages.length ? <div className="d-inline-block mx-5"> <Button onClick={this.getInvoice}  color="secondary" size= "lg">Generate PDF</Button> </div> : <div className="d-inline-block mx-5"><Button color="secondary" size= "lg" disabled>Generate PDF</Button></div>}  
+          </div>
+
+           { packages.length ? <PackageTable packages={packages} /> : <Container><h3 className="m-5">No package found</h3></Container> }
+        </Container>   
       </div>
     )
   }
