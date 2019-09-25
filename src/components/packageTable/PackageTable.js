@@ -1,9 +1,8 @@
 import React from 'react'
 import { Table } from 'reactstrap'
+import { doSum } from '../../logic'
 
-
-
-const PackageTable =  ({packages,total}) => {
+const PackageTable =  ({packages}) => {
   const packageList = packages.length ? (
     packages.map(pack => {
       return (
@@ -16,7 +15,9 @@ const PackageTable =  ({packages,total}) => {
       ) 
     })
   ) : null
-  
+
+    const totalCostArr = packages.map(pack => pack.totalCost)  
+    const total = doSum(totalCostArr)
     return (
       <div className="PackageTable">
           <Table striped id="my-table">
@@ -29,14 +30,22 @@ const PackageTable =  ({packages,total}) => {
             </tr>
           </thead>
           <tbody>
-          { packageList }
+            { packageList }
+            <tr>
+            <th ></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            </tr>          
+            <tr key ="total100" className="mx-4">
+            <th ></th>
+            <td></td>
+            <td></td>
+            <td> <strong>Total: ${ total }</strong></td>
+            </tr>
           </tbody>
       </Table>
-          <div className="float-right">
-            <strong><p className="display-5 total"> Total: ${ total }</p></strong>
-          </div>
       </div>
-
     );
 }
 
