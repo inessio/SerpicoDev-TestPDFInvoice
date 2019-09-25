@@ -9,12 +9,15 @@ import {
 import AddPackage from '../addPackageForm/AddPackage'
 import PackageTable from '../packageTable/PackageTable'
 import generateInvoice from '../invoice/Invoice'
+import { doSum } from '../../logic'
 
 class App extends Component {
 
   state = {
-    packages:[]
+    packages:[],
+    total:0
   }
+ 
 
   addPackage = (pack) => {
     let packs = [...this.state.packages, pack]
@@ -27,8 +30,23 @@ class App extends Component {
     cookies = this.state.packages
     generateInvoice(cookies)
   }
+
+  async getTotal () {
+    let cookies = this.state.packages
+    let costArray = await  cookies.map(
+      pack => {
+        return pack.totalCost
+      }
+    )
+    console.log('total arrray',costArray)
+    this.setState({
+      total: doSum(costArray)
+    })
+  }
+
   render(){
-    const { packages } = this.state
+    const { packages,total } = this.state
+    console.log(total)
     return (
       <div className="App">
         <Jumbotron>
@@ -43,7 +61,7 @@ class App extends Component {
                 { packages.length ? <div className="d-inline-block mx-5"> <Button onClick={this.getInvoice}  color="secondary" size= "lg">Generate PDF</Button> </div> : <div className="d-inline-block mx-5"><Button color="secondary" size= "lg" disabled>Generate PDF</Button></div>}  
           </div>
 
-           { packages.length ? <PackageTable packages={packages} /> : <Container><h3 className="m-5">No package found</h3></Container> }
+           { packages.length ? <PackageTable packages={packages} total={total}/> : <Container><hr className="my-2" /><h3 className="m-5">No cookie package </h3></Container> }
         </Container>   
       </div>
     )
