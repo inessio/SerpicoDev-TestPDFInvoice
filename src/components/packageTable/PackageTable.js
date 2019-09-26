@@ -17,7 +17,8 @@ const PackageTable =  ({packages}) => {
   ) : null
 
     const totalCostArr = packages.map(pack => pack.totalCost)  
-    const total = doSum(totalCostArr)
+    const total = doSum(totalCostArr).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")
+
     return (
       <div className="PackageTable">
           <Table striped id="my-table">
@@ -42,12 +43,6 @@ const PackageTable =  ({packages}) => {
             <td></td>
             <td></td>
             <td> <strong>Total: ${ total }</strong></td>
-            </tr>
-            <tr>
-            <th ></th>
-            <td></td>
-            <td></td>
-            <td></td>
             </tr>
           </tbody>
       </Table>

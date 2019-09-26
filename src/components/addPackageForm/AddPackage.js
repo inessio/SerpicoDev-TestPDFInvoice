@@ -150,8 +150,3 @@ class AddPackage extends Component {
       }
 }
 export default AddPackage
-
-// options={[
-//   {'value': 'created_at', 'label': 'Creation Date'},
-//   {'value': 'alphabetical', 'label': 'A to Z'}
-// ]}

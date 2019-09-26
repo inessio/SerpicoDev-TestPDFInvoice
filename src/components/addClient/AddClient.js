@@ -1,5 +1,5 @@
 import React ,{ Component } from 'react'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter,Form,FormGroup,Label,Input } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody,Form,FormGroup,Label,Input } from 'reactstrap';
 import './AddClient.scss'
 import generateInvoice from '../invoice/Invoice'
 
@@ -17,6 +17,7 @@ class AddClient extends Component {
         };
     
         this.toggle = this.toggle.bind(this);
+        this.handleClientInfo = this.handleClientInfo.bind(this)
       }
     
       toggle() {
@@ -72,7 +73,6 @@ class AddClient extends Component {
           return (
           <div className="AddClient">
             <Button color="primary" size="sm" onClick={this.toggle}>Generate PDF</Button>
-           
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
               <ModalHeader toggle={this.toggle} close={closeBtn}>Client information</ModalHeader>
               <ModalBody>
@@ -89,9 +89,6 @@ class AddClient extends Component {
                     <Button color="primary" type="submit" onClick={this.toggle}>Submit</Button>
                     </Form>
               </ModalBody>
-              <ModalFooter>
-               
-              </ModalFooter>
             </Modal>
             
           </div>
