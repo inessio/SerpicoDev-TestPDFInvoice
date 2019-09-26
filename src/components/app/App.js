@@ -6,7 +6,7 @@ import {
         Container,
         Row,
         Button,
-        Navbar
+        Navbar,Footer
         
       } from 'reactstrap'
 import AddPackage from '../addPackageForm/AddPackage'
@@ -16,7 +16,9 @@ import generateInvoice from '../invoice/Invoice'
 class App extends Component {
 
   state = {
-    packages:[]
+    packages:[],
+    clientName: '',
+    comment:''
   }
  
 
@@ -47,7 +49,7 @@ class App extends Component {
             <h2 className="mb-4">SerpiCookies</h2>
           </div>
           <hr className="my-2" />
-          <Row className="mt-2">
+          <Row className="mt-2 overflow-auto">
             <div className="col-sm-6 overflow-auto">
                 <AddPackage addPackage={this.addPackage} /> 
             </div>
@@ -56,6 +58,12 @@ class App extends Component {
              </div> 
           </Row>
         </Container>   
+        
+        <footer className="footer">
+      <Container>
+        <span className="text-muted"> SerpiCookies All rights reserved</span>
+      </Container>
+    </footer>
       </div>
     )
   }

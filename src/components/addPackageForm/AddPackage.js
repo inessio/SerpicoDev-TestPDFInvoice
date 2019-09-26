@@ -20,7 +20,13 @@ class AddPackage extends Component {
         this.state = {
           clientName:'',
           comment:'',
-          cookies:[{code:'',cookieType:'',individualCost:0.00,quantity:0,totalCost:0.00}],
+          code:'',
+          cookieType:'',
+          individualCost:0,
+          quantity:0,
+          totalCost:0,
+
+          // cookies:[{code:'',cookieType:'',individualCost:0.00,quantity:0,totalCost:0.00}],
           errors:{
               code:[],
               cookieType:[],
@@ -52,6 +58,13 @@ class AddPackage extends Component {
         })
       }
 
+      handleClientInfo = (e) =>{
+        this.setState({
+          [e.target.id]:e.target.value
+        })
+        console.log(this.state)
+      }
+
       // handleDynamicChange = idx => evt => {
       //   const newShareholders = this.state.cookies.map((shareholder, sidx) => {
           
@@ -73,11 +86,11 @@ class AddPackage extends Component {
         })
       }
 
-      addCat = (e) =>{
-        this.setState((prevState) => ({
-          cats: [...prevState.cookies, {code:'',cookieType:'',individualCost:0.00,quantity:0,totalCost:0.00}],
-        }));
-      }
+      // addCat = (e) =>{
+      //   this.setState((prevState) => ({
+      //     cats: [...prevState.cookies, {code:'',cookieType:'',individualCost:0.00,quantity:0,totalCost:0.00}],
+      //   }));
+      // }
     
       render() {
         return (
@@ -131,11 +144,11 @@ class AddPackage extends Component {
               <CardTitle>Client information</CardTitle>
               <FormGroup>
                   <Label className="float-left" for="clientName">Client Name</Label>
-                  <Input type="text" name="clientName" id="clientName" placeholder="Prince Doe" onChange={this.handleChange} required/>
+                  <Input type="text" name="clientName" value={this.state.clientName} id="clientName" placeholder="Prince Doe" onChange={this.handleClientInfo} required/>
                 </FormGroup>
                 <FormGroup>
                   <Label className="float-left" for="Comment">Comment</Label>
-                    <Input type="textarea" name="Comment" id="Comment" placeholder="type your comment" onChange={this.handleChange}/>
+                    <Input type="textarea" name="Comment" value={this.state.comment} id="Comment" placeholder="type your comment" onChange={this.handleClientInfo}/>
                 </FormGroup>
              </Card>
               <Button color="primary" size="lg" type="submit" className="mt-4" block>Add</Button>
