@@ -43,6 +43,12 @@ const PackageTable =  ({packages}) => {
             <td></td>
             <td> <strong>Total: ${ total }</strong></td>
             </tr>
+            <tr>
+            <th ></th>
+            <td></td>
+            <td></td>
+            <td></td>
+            </tr>
           </tbody>
       </Table>
       </div>

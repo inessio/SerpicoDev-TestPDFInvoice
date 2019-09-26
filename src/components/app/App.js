@@ -1,24 +1,19 @@
 import React, { Component } from 'react'
 import './App.scss'
 import Logo from '../../assets/images/logo.png'
-import { 
-        Jumbotron, 
-        Container,
-        Row,
-        Button,
-        Navbar,Footer
-        
-      } from 'reactstrap'
+import { Container,Row,Navbar} from 'reactstrap'
 import AddPackage from '../addPackageForm/AddPackage'
 import PackageTable from '../packageTable/PackageTable'
-import generateInvoice from '../invoice/Invoice'
+import AddClient from '../addClient/AddClient'
 
 class App extends Component {
 
   state = {
     packages:[],
     clientName: '',
-    comment:''
+    comment:'',
+    website:'www.serpicookies.com'
+
   }
  
 
@@ -29,41 +24,43 @@ class App extends Component {
     })
   }
 
-  getInvoice = (cookies) =>{
-    cookies = this.state.packages
-    generateInvoice(cookies)
+  addClient = (name,comment) => {
+    console.log('committ')
+    this.setState({
+      clientName: name,
+      comment:comment
+    })
   }
 
   render(){
     const { packages } = this.state
     return (
-      <div className="App">
-      
-        <Navbar color="light" light expand="md" className="h-25 p-3">
-              
+      <div className="App"> 
+        <Navbar color="light" light expand="md" className="h-25 p-3">       
         </Navbar>
-
         <Container className="mt-4">
           <div className="">
             <img src={Logo} alt="logo"></img>
             <h2 className="mb-4">SerpiCookies</h2>
           </div>
           <hr className="my-2" />
-          <Row className="mt-2 overflow-auto">
-            <div className="col-sm-6 overflow-auto">
-                <AddPackage addPackage={this.addPackage} /> 
+            
+          <Row className="mt-2">
+            <div className="col-sm-6 ">
+                <AddPackage addPackage={this.addPackage} packages={packages} /> 
             </div>
-            <div className="col-sm-6 overflow-auto">
-                { packages.length ? <PackageTable packages={packages} /> : <Container><h3 className="m-5">No cookie package </h3></Container> }
+            <div className="col-sm-6 cookie-table">
+                { packages.length ? <AddClient  invoice={this.state} addClient={this.addClient} /> : ''}
+                { packages.length ? <PackageTable packages={packages} /> : <Container><h5 className="m-5">No cookie package added</h5></Container> }
              </div> 
           </Row>
         </Container>   
         
-        <footer className="footer">
-      <Container>
-        <span className="text-muted"> SerpiCookies All rights reserved</span>
-      </Container>
-    </footer>
+      <footer className="footer">
+        <Container>
+          <span className="text-muted"> SerpiCookies All rights reserved</span>
+        </Container>
+      </footer>
       </div>
     )
   }
@@ -72,4 +69,4 @@ class App extends Component {
 
 export default App;
 
-// { packages.length ? <div className="d-inline-block mx-5"> <Button onClick={() => {generateInvoice(packages)}}  color="secondary" size= "lg">Generate PDF</Button> </div> : <div className="d-inline-block mx-5"><Button color="secondary" size= "lg" disabled>Generate PDF</Button></div>}  
+// { packages.length ? <div className="mb-3"> <Button onClick={() => {generateInvoice(this.state)}}  color="primary" size= "sm" >Generate PDF</Button> </div> : ''}

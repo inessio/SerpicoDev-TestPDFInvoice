@@ -1,96 +1,87 @@
 import React ,{ Component } from 'react'
-// import {  validate } from '../../validation';
-import { 
-         Button, 
-         CardTitle,
-         Label, 
-         Input, 
-         FormGroup, 
-         Form,
-         Row,
-         Col,
-         Card,
-         Container 
-        } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Button, CardTitle,Label, Input, FormGroup, Form,Row,Col,Card,Container } from 'reactstrap';
 
 class AddPackage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          clientName:'',
-          comment:'',
+          code:'',
+          cookieType:'',
+          individualCost:0,
+          quantity:0,
+          totalCost:0,
+          errors:{
+            code:[],
+            cookieType:[],
+            clientName:[],
+            individualCost:[],
+            quantity:[]
+          },
+          formValid: false,
+        };
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+      }
+      async handleChange(e) {
+        await this.setState({
+          [e.target.id]: e.target.value
+        });
+        let totalCost = Math.round((this.state.individualCost * this.state.quantity)*100) / 100
+        this.setState({
+          totalCost: totalCost
+        })
+        this.validate(e);
+      }
+
+      handleSubmit = (e) => {
+        e.preventDefault()
+        this.props.addPackage(this.state)
+        this.setState({
           code:'',
           cookieType:'',
           individualCost:0,
           quantity:0,
           totalCost:0,
 
-          // cookies:[{code:'',cookieType:'',individualCost:0.00,quantity:0,totalCost:0.00}],
-          errors:{
-              code:[],
-              cookieType:[],
-              clientName:[],
-              individualCost:[],
-              quantity:[]
-          }
-        };
-    
-        this.toggle = this.toggle.bind(this);
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
-      }
-    
-      toggle() {
-        this.setState(prevState => ({
-          modal: !prevState.modal
-        }));
-      }
-
-       async handleChange(e) {
-        await this.setState({
-            [e.target.id]:e.target.value
-          }) 
-        let multiply = this.state.cookies.map(cookie => { return Math.round((cookie.quantity * cookie.totalCost)*100 / 100)})
-        let totalCost = Math.round(multiply * 100) / 100
-        this.setState({
-          totalCost: totalCost
         })
       }
 
-      handleClientInfo = (e) =>{
-        this.setState({
-          [e.target.id]:e.target.value
-        })
-        console.log(this.state)
+      validate = (event) => {
+        const { name,value } = event.target
+        let errors = this.state.errors;
+        switch(name){
+          case 'code':
+            errors.code = [];
+            const itemFound = this.props.packages.find((item) => {  return item.code === value; });
+            errors.code.push(!value ? 'cookie code is required' : (value.length > 10 ? 'cookie code must not be more than 10 characters' : 
+            (/[^0-9a-zA-Z]/.test(value) ? 'cookie code contains invalid characters' : (itemFound !== undefined ? 'cookie code already exists' : ''))));
+            break;
+          case 'cookieType':
+            errors.cookieType = [];
+            errors.cookieType.push(!value ? 'cookie type is required' : (value === '' ? 'cookie type is required' : ''));
+            break;
+          case 'quantity':
+            errors.quantity = [];
+            errors.quantity.push(!value ? 'quantity is required' : (/[^0-9]/.test(value) ? 'quantity can be numbers only' : ''));
+            break;
+          case 'individualCost':
+            errors.individualCost = [];
+            errors.individualCost.push(!value ? 'individual cost is required' : '');
+            break;
+          default:
+        }
+        this.setState({ errors });
+        if(errors.code[0] === '' && errors.cookieType[0] === '' && errors.quantity[0] === '' && errors.individualCost[0] === '') {
+          this.setState({ formValid: true });
+        } else {
+          this.setState({ formValid: false });
+        }
+        return true;
       }
 
-      // handleDynamicChange = idx => evt => {
-      //   const newShareholders = this.state.cookies.map((shareholder, sidx) => {
-          
-      //     if (idx !== sidx) return shareholder;
-      //     console.log({...shareholder, [evt.target.id]: evt.target.value})
-      //     return { ...shareholder, code: evt.target.value };
-      //   });
-        
-      //   this.setState({ cookies: newShareholders });
-      //   console.log(this.state)
-       
-      // };
-
-      handleSubmit = (e) => {
-        e.preventDefault()
-        this.props.addPackage(this.state)
-        this.setState({
-          totalCost:0.00
-        })
+      errorClass(error) {
+        return((error === '') || (error === undefined) ? '' : 'has-error');
       }
-
-      // addCat = (e) =>{
-      //   this.setState((prevState) => ({
-      //     cats: [...prevState.cookies, {code:'',cookieType:'',individualCost:0.00,quantity:0,totalCost:0.00}],
-      //   }));
-      // }
     
       render() {
         return (
@@ -102,19 +93,21 @@ class AddPackage extends Component {
                 <Col md={6}>
                   <FormGroup>
                     <Label className="float-left" for="cookieCode">Cookie code</Label>
-                    <Input type="text" name="code" id="code" placeholder="DEVCOOK023" required/>
-                    <span>{this.state.errors.code}</span>
+                    <Input type="text" name="code" value={this.state.code} id="code" placeholder="DEVCOOK023" onChange={(event) => {event.persist();this.handleChange(event)}} required/>
+                    { this.errorClass(this.state.errors.code[0]) !== '' ? <small style={{ color: 'red'}}>{this.state.errors.code[0]}</small> : null }
                   </FormGroup>
                 </Col>
                 <Col md={6}>
                   <FormGroup>
                     <Label className="float-left" for="cookieType">Cookie Type</Label>
-                    <Input type="select" name="cookieType" id="cookieType" placeholder="password placeholder" defaultValue={'DEFAULT'} required>
+                    <Input type="select" value={this.state.cookieType} name="cookieType" id="cookieType" placeholder="password placeholder" defaultValue={'DEFAULT'} onChange={(event) => {event.persist();this.handleChange(event)}} required>
                         <option value="DEFAULT" disabled>Select</option>
                         <option value="Chocolate" >Chocolate</option>
                         <option value="Vainilla" >Vainilla</option>
                         <option value="Strawberry">Strawberry</option>
                     </Input>
+                   
+                    { this.errorClass(this.state.errors.cookieType[0]) !== '' ? <small style={{ color: 'red'}}>{this.state.errors.cookieType[0]}</small> : null }
                   </FormGroup>
                 </Col>
               </Row>
@@ -122,40 +115,43 @@ class AddPackage extends Component {
                 <Col md={4}>
                   <FormGroup>
                     <Label className="float-left" for="quantity">Quantity</Label>
-                    <Input type="number" name="quantity" id="quantity"  required/>
+                    <Input type="number" name="quantity" value={this.state.quantity} id="quantity" onChange={(event) => {event.persist();this.handleChange(event)}} required/>
+                    { this.errorClass(this.state.errors.quantity[0]) !== '' ? <small style={{ color: 'red'}}>{this.state.errors.quantity[0]}</small> : null }
                   </FormGroup>
                 </Col>
                 <Col md={4}>
                 <FormGroup>
                   <Label className="float-left" for="individualCost">Individual Cost</Label>
-                  <Input type="number" name="individualCost" id="individualCost" step=".01" required/>
+                  <Input type="number" name="individualCost" value={this.state.individualCost} onChange={(event) => {event.persist();this.handleChange(event)}} id="individualCost" step=".01" required/>
+                  { this.errorClass(this.state.errors.individualCost[0]) !== '' ? <small style={{ color: 'red'}}>{this.state.errors.individualCost[0]}</small> : null }
                 </FormGroup>
                 </Col>
                 <Col md={4}>
                 <FormGroup>
                   <Label className="float-left" for="totalCost">Total Cost</Label>
-                  <Input type="number" name="totalCost" id="totalCost" step=".01" readOnly/>
+                  <Input type="number" name="totalCost" value={this.state.totalCost} id="totalCost" step=".01" readOnly/>
                 </FormGroup>  
                 </Col>
               </Row>
-              <Button color="info" onClick={this.addCat}>add new Package</Button>
+              <Button 
+              color="primary" 
+              ize="lg" 
+              type="submit"
+                block 
+                disabled={ !this.state.formValid }
+                style={{ cursor: this.state.formValid ? 'pointer' : 'not-allowed' }}
+                title={ this.state.formValid ? 'Click to add package' : 'Please fill the form to continue' }>add new Package 
+                <i className="fa fa-user"></i></Button>
             </Card>
-              <Card body className="mt-4">
-              <CardTitle>Client information</CardTitle>
-              <FormGroup>
-                  <Label className="float-left" for="clientName">Client Name</Label>
-                  <Input type="text" name="clientName" value={this.state.clientName} id="clientName" placeholder="Prince Doe" onChange={this.handleClientInfo} required/>
-                </FormGroup>
-                <FormGroup>
-                  <Label className="float-left" for="Comment">Comment</Label>
-                    <Input type="textarea" name="Comment" value={this.state.comment} id="Comment" placeholder="type your comment" onChange={this.handleClientInfo}/>
-                </FormGroup>
-             </Card>
-              <Button color="primary" size="lg" type="submit" className="mt-4" block>Add</Button>
+             
           </Form>  
         </Container>
         );
       }
 }
-
 export default AddPackage
+
+// options={[
+//   {'value': 'created_at', 'label': 'Creation Date'},
+//   {'value': 'alphabetical', 'label': 'A to Z'}
+// ]}
