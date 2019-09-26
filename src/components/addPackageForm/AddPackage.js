@@ -100,7 +100,7 @@ class AddPackage extends Component {
                 <Col md={6}>
                   <FormGroup>
                     <Label className="float-left" for="cookieType">Cookie Type</Label>
-                    <Input type="select" value={this.state.cookieType} name="cookieType" id="cookieType" placeholder="password placeholder" defaultValue={'DEFAULT'} onChange={(event) => {event.persist();this.handleChange(event)}} required>
+                    <Input type="select" defaultValue={'DEFAULT'} name="cookieType" id="cookieType" onChange={(event) => {event.persist();this.handleChange(event)}} required>
                         <option value="DEFAULT" disabled>Select</option>
                         <option value="Chocolate" >Chocolate</option>
                         <option value="Vainilla" >Vainilla</option>

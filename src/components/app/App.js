@@ -67,6 +67,4 @@ class App extends Component {
  
 }
 
-export default App;
-
-// { packages.length ? <div className="mb-3"> <Button onClick={() => {generateInvoice(this.state)}}  color="primary" size= "sm" >Generate PDF</Button> </div> : ''}
+export default App

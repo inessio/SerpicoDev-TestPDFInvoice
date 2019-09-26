@@ -13,7 +13,8 @@ class AddClient extends Component {
           errors:{
             clientName:[], 
             comment:[]
-          }     
+          },
+          formValid:false     
         };
     
         this.toggle = this.toggle.bind(this);
@@ -40,8 +41,7 @@ class AddClient extends Component {
         switch(name){
           case 'clientName':
             errors.clientName = [];
-            errors.clientName.push(!value ? 'client name is required' : (value.length > 50 ? 'client name must not be more than 50 characters' : 
-            (/^[ \w#-]+$/.test(value) ? 'client name contains invalid characters' : '')));
+            errors.clientName.push(!value ? 'client name is required' : (value.length > 50 ? 'client name must not be more than 50 characters' : ''));
             break;
           default:
         }
@@ -86,7 +86,9 @@ class AddClient extends Component {
                         <Label className="float-left" for="comment">Comment</Label>
                         <Input type="textarea" name="comment" id="comment" placeholder="type your comment" onChange={this.handleClientInfo}/>
                     </FormGroup>
-                    <Button color="primary" type="submit" onClick={this.toggle}>Submit</Button>
+                    <Button color="primary" type="submit" block 
+                            disabled={ !this.state.formValid }
+                            style={{ cursor: this.state.formValid ? 'pointer' : 'not-allowed' }} onClick={this.toggle}>Submit</Button>
                     </Form>
               </ModalBody>
             </Modal>
